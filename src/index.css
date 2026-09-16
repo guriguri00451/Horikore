@@ -1,0 +1,333 @@
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: #d6cfc6;
+  font-family: "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+}
+
+canvas {
+  display: block;
+  cursor: grab;
+}
+
+canvas:active {
+  cursor: grabbing;
+}
+
+.hud {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 20;
+  box-sizing: border-box;
+  width: 22.5rem;
+  max-width: calc(100vw - 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(20, 16, 12, 0.72);
+  color: #f6efe6;
+  font-size: 13px;
+}
+
+.hud-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+.state {
+  flex: 0 0 9ch;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.warn {
+  color: #ffd8a8;
+}
+
+.sleep-gauge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sleep-gauge-label {
+  flex: 0 0 auto;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.sleep-gauge-bar {
+  position: relative;
+  flex: 1;
+  min-width: 120px;
+  height: 10px;
+}
+
+.sleep-gauge-track {
+  height: 100%;
+  border-radius: 999px;
+  background: #2a241d;
+  overflow: hidden;
+}
+
+.sleep-gauge-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d4c09a, #8bb8d4);
+  transition: width 0.25s linear;
+}
+
+.sleep-gauge.nodding .sleep-gauge-fill {
+  background: linear-gradient(90deg, #8bb8d4, #5a8cbe);
+}
+
+.sleep-gauge.sleeping .sleep-gauge-fill {
+  background: #4a6fa5;
+}
+
+.sleep-gauge.paused .sleep-gauge-fill {
+  background: #5a5248;
+}
+
+.sleep-gauge-mark {
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 16px;
+  background: #f6efe6;
+  opacity: 0.55;
+  transform: translateX(-0.5px);
+  pointer-events: none;
+}
+
+.sleep-gauge-meta {
+  flex: 0 0 9.5em;
+  width: 9.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+.heard-status {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.heard-status.live {
+  opacity: 1;
+}
+
+.heard-status.warn {
+  color: #ffd8a8;
+  opacity: 1;
+}
+
+.heard-caption {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 20;
+  width: min(420px, calc(100vw - 24px));
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(20, 16, 12, 0.72);
+  color: #f6efe6;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.heard-caption-label {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+}
+
+.heard-caption-text {
+  min-height: 1.5em;
+  font-size: 18px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.heard-caption.empty .heard-caption-text {
+  opacity: 0.45;
+  font-size: 14px;
+}
+
+.heard-caption.echo .heard-caption-text {
+  opacity: 0.6;
+}
+
+.heard-caption.hit .heard-caption-text {
+  color: #ffe8b8;
+}
+
+.hud button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: #efe4d4;
+  color: #2b2118;
+  cursor: pointer;
+}
+
+.hud button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 12px;
+  background: rgba(12, 9, 6, 0.42);
+}
+
+.settings {
+  width: min(380px, 100%);
+  max-height: calc(100% - 24px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 16px 16px;
+  border-radius: 12px;
+  background: rgba(20, 16, 12, 0.92);
+  color: #f6efe6;
+  font-size: 13px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+.settings-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.settings-head h2,
+.settings-section h3 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.settings-section h3 {
+  font-size: 12px;
+  opacity: 0.72;
+  margin-bottom: 8px;
+}
+
+.settings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-row + .settings-row {
+  margin-top: 8px;
+}
+
+.settings-row.wrap {
+  margin-top: 0;
+}
+
+.settings-volume {
+  flex-wrap: nowrap;
+}
+
+.settings-volume > span:first-child {
+  flex: 0 0 3em;
+}
+
+.settings-volume input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  accent-color: #efe4d4;
+}
+
+.settings-volume .settings-meta {
+  flex: 0 0 2.4em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.settings-meta {
+  opacity: 0.8;
+}
+
+.settings-hint {
+  margin: 6px 0 0;
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+.settings-hint.warn {
+  color: #ffd8a8;
+  opacity: 1;
+}
+
+.settings button {
+  border: 0;
+  border-radius: 6px;
+  padding: 4px 8px;
+  background: #efe4d4;
+  color: #2b2118;
+  cursor: pointer;
+}
+
+.settings button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.balloon-anchor {
+  width: 10em;
+  pointer-events: none;
+}
+
+.balloon {
+  box-sizing: border-box;
+  width: 10em;
+  min-height: 2.8em;
+  padding: 5px 8px;
+  border-radius: 10px;
+  background: #fffdf8;
+  color: #2a2118;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 3px 0 #c9b8a2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(8px, -50%);
+}

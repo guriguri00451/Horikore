@@ -1,0 +1,6 @@
+/models
+*.fbx
+preview.png
+docs
+scripts
+.DS_Store
